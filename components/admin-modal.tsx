@@ -9,9 +9,10 @@ interface AdminModalProps {
   onClose: () => void
   schedule: ScheduleData
   onUpdated: (data: ScheduleData) => void
+  onAuthed?: () => void
 }
 
-export function AdminModal({ open, onClose, schedule, onUpdated }: AdminModalProps) {
+export function AdminModal({ open, onClose, schedule, onUpdated, onAuthed }: AdminModalProps) {
   const [password, setPassword] = useState('')
   const [authed, setAuthed] = useState(false)
   const [authError, setAuthError] = useState('')
@@ -30,6 +31,7 @@ export function AdminModal({ open, onClose, schedule, onUpdated }: AdminModalPro
       setAuthed(true)
       setAuthError('')
       setDraftGantt(schedule.gantt)
+      onAuthed?.()
     } else {
       setAuthError('密碼錯誤，請重新輸入。')
     }
