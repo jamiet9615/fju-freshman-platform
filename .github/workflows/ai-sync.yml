@@ -1,0 +1,39 @@
+name: AI Agent 自動對時
+
+# 人機協同：只在接班代理人手動點擊「Run workflow」時執行，
+# 不做背景輪詢，省算力也省 API 費用。
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: 安裝相依套件
+        run: pip install -r scripts/requirements.txt
+
+      - name: 執行 AI Agent 對時
+        env:
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+        run: python scripts/ai_agent.py
+
+      - name: 提交更新後的時程
+        run: |
+          git config user.name "fju-freshman-bot"
+          git config user.email "bot@users.noreply.github.com"
+          git add data/schedule.json
+          if git diff --staged --quiet; then
+            echo "時程無變動，略過提交。"
+          else
+            git commit -m "chore: AI Agent 自動對時更新時程 [skip ci]"
+            git push
+          fi

@@ -1,0 +1,89 @@
+@import 'tailwindcss';
+@import 'tw-animate-css';
+@import 'shadcn/tailwind.css';
+
+@custom-variant dark (&:is(.dark *));
+
+@theme inline {
+  --font-sans: var(--font-noto-sans-tc), 'PingFang TC', 'Microsoft JhengHei', sans-serif;
+  --font-mono: var(--font-jetbrains-mono), ui-monospace, monospace;
+
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+
+  /* Game-style Gantt status colors */
+  --color-status-safe: var(--status-safe);
+  --color-status-active: var(--status-active);
+  --color-status-warn: var(--status-warn);
+  --color-status-danger: var(--status-danger);
+
+  --radius-sm: calc(var(--radius) * 0.6);
+  --radius-md: calc(var(--radius) * 0.8);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) * 1.4);
+}
+
+:root {
+  color-scheme: light;
+
+  --background: #eceef1;
+  --foreground: #333333;
+
+  --card: #ffffff;
+  --card-foreground: #333333;
+
+  --popover: #ffffff;
+  --popover-foreground: #333333;
+
+  /* 輔大 navy */
+  --primary: #003d79;
+  --primary-foreground: #ffffff;
+
+  --secondary: #eef2ff;
+  --secondary-foreground: #003d79;
+
+  --muted: #f0f2f5;
+  --muted-foreground: #666666;
+
+  --accent: #eef2ff;
+  --accent-foreground: #3b82f6;
+
+  --destructive: #dc2626;
+
+  --border: #e5e7eb;
+  --input: #e5e7eb;
+  --ring: #003d79;
+
+  /* Gantt status palette (semantic, game-style) */
+  --status-safe: #16a34a;   /* green - plenty of time */
+  --status-active: #2563eb; /* blue - in progress */
+  --status-warn: #f59e0b;   /* amber - closing soon */
+  --status-danger: #ef4444; /* red - about to close */
+
+  --radius: 0.75rem;
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+  body {
+    @apply bg-background text-foreground;
+  }
+}
