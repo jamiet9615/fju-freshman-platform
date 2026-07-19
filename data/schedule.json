@@ -1,6 +1,6 @@
 {
-  "updatedAt": "2026-07-19T19:29:56.642Z",
-  "updatedBy": "admin",
+  "updatedAt": "2026-07-19T20:03:56.927867Z",
+  "updatedBy": "ai-agent",
   "gantt": [
     {
       "id": "course-selection",
@@ -17,34 +17,46 @@
     {
       "id": "tuition",
       "label": "學雜費繳納",
-      "start": "2026-07-10",
+      "start": "2026-08-01",
       "end": "2026-08-31"
     }
   ],
   "todos": [
     {
-      "id": "photo",
-      "text": "上傳大頭照（影響學生證領取）"
+      "id": "ai-0",
+      "text": "完成單一帳號（LDAP）啟用"
     },
     {
-      "id": "profile-form",
-      "text": "填寫 MyFJU 個人基本資料"
+      "id": "ai-1",
+      "text": "開通Office365教育版帳戶（學號@cloud.fju.edu.tw）"
     },
     {
-      "id": "email",
-      "text": "啟用學校 Email 並設定轉寄"
+      "id": "ai-2",
+      "text": "登入學生資訊管理系統填寫個人、兵役及健康資料"
     },
     {
-      "id": "course",
-      "text": "研究選課辦法與衝堂規則"
+      "id": "ai-3",
+      "text": "上網下載並依說明繳納學雜費（上學期自115年8月1日起）"
     },
     {
-      "id": "tuition-pay",
-      "text": "下載並繳納學雜費繳費單"
+      "id": "ai-4",
+      "text": "上傳學歷文件至學生資訊平台（115年10月13日前完成）"
     },
     {
-      "id": "tronclass",
-      "text": "登入 TronClass 確認課程"
+      "id": "ai-5",
+      "text": "完成新生健康檢查（入學後一個月內）"
+    },
+    {
+      "id": "ai-6",
+      "text": "至UCAN平台進行職能評估"
+    },
+    {
+      "id": "ai-7",
+      "text": "依選課時程表及須知辦理選課"
+    },
+    {
+      "id": "ai-8",
+      "text": "參與115學年度新生開學典禮暨輔導教育日（115年9月11日）"
     }
   ]
 }
