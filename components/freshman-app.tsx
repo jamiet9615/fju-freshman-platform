@@ -45,8 +45,8 @@ export function FreshmanApp({ initialSchedule }: { initialSchedule: ScheduleData
       if (g) setGantt(JSON.parse(g))
       const t = localStorage.getItem(LS_TODOS)
       if (t) setTodos(JSON.parse(t))
-      const c = localStorage.getItem(LS_CARDS)
-      if (c) setCards(JSON.parse(c))
+      //const c = localStorage.getItem(LS_CARDS)
+      //if (c) setCards(JSON.parse(c))
     } catch {
       /* ignore */
     }
@@ -72,13 +72,13 @@ export function FreshmanApp({ initialSchedule }: { initialSchedule: ScheduleData
   }, [todos, hydrated])
 
   useEffect(() => {
-    if (!hydrated) return
     try {
-      localStorage.setItem(LS_CARDS, JSON.stringify(cards))
+      // 刪除瀏覽器快取，確保正常模式與所有人都能同步 lib/links.ts 的最新修改
+      localStorage.removeItem(LS_CARDS)
     } catch {
       /* ignore */
     }
-  }, [cards, hydrated])
+  }, [])
 
   // Gantt handlers
   const addGantt = (label: string, start: string, end: string) =>
