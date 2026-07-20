@@ -187,13 +187,13 @@ export function GanttSchedule({
   isAdmin,
   onAdd,
   onDelete,
-  onUpdate, // 👈 這裡！一定要在括號內加入 onUpdate
+  onUpdate,
 }: {
   tasks: GanttTask[]
   isAdmin: boolean
   onAdd?: (task: Omit<GanttTask, 'id'>) => void
   onDelete?: (id: string) => void
-  onUpdate?: (id: string, updatedTask: Partial<GanttTask>) => void // 👈 還有這裡！加上型別宣告
+  onUpdate?: (id: string, updatedTask: Partial<GanttTask>) => void
 }) {
   const [newLabel, setNewLabel] = useState('')
   const [newStart, setNewStart] = useState('')
@@ -209,7 +209,8 @@ export function GanttSchedule({
     }
   }
 
-  return 
+  // ✅ 這裡的 return 後面補上了小括號 (
+  return (
     <section id="gantt" className="relative flex flex-col justify-between space-y-4 rounded-xl border border-border bg-card p-5 shadow-sm transition-all">
       <div className="flex items-center justify-between gap-4">
         <div className="flex items-center gap-2">
@@ -293,7 +294,7 @@ export function GanttSchedule({
                 task={t}
                 isAdmin={isAdmin}
                 onDelete={onDelete ?? (() => {})}
-                onUpdate={onUpdate} // 👈 將主元件的 onUpdate 傳給子元件
+                onUpdate={onUpdate}
               />
             ))}
           </ul>
