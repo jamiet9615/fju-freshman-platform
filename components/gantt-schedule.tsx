@@ -100,7 +100,7 @@ function GanttRow({
     )
   }
 
-  // 🔽 顯示模式 UI（補回質感底框與顏色）
+  // 🔽 顯示模式 UI
   return (
     <li className="rounded-lg border-2 border-border/80 bg-muted/30 p-3 shadow-sm transition-all hover:border-primary/40 hover:bg-muted/50">
       <div className="mb-2 flex items-center justify-between gap-2">
@@ -182,7 +182,8 @@ function GanttRow({
         </span>
       </div>
     </li>
-  })
+  )
+}
 
 export function GanttSchedule({
   tasks,
