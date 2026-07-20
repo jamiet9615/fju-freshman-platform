@@ -4,6 +4,8 @@ name: AI Agent 自動對時
 # 不做背景輪詢，省算力也省 API 費用。
 on:
   workflow_dispatch:
+  schedule:
+    - cron: '0 16 * * *' # 每天 UTC 16:00 (台灣時間半夜 12:00) 自動跑
 
 permissions:
   contents: write
