@@ -212,7 +212,7 @@ export function GanttSchedule({
   }
 
   return (
-    <section id="gantt" className="relative space-y-4 rounded-xl bg-muted/30 p-4 shadow-sm border-2 border-border/80">
+    <section id="gantt" className="relative space-y-4 rounded-2xl bg-card p-5 shadow-md border-2 border-primary/20">
       <div className="flex items-center justify-between gap-4">
         <div className="flex items-center gap-2">
           <Zap className="size-5 text-primary" />
