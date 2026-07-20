@@ -16,16 +16,17 @@ function Card({
   open: boolean
   onToggle: () => void
   isAdmin: boolean
-  onUpdateCard: (id: string, patch: Partial<Pick<LinkCard, 'title' | 'tag' | 'description'>>) => void
+  onUpdateCard: (id: string, patch: Partial<Pick<LinkCard, 'title' | 'tag' | 'description' | 'buttons'>>) => void
   onDeleteCard: (id: string) => void
 }) {
   const [draftTitle, setDraftTitle] = useState(card.title)
   const [draftTag, setDraftTag] = useState(card.tag) 
   const [draftDescription, setDraftDescription] = useState(card.description)
+  const [draftButtons, setDraftButtons] = useState(card.buttons || [])
   const [saved, setSaved] = useState(false)
 
   const handleSave = () => {
-    onUpdateCard(card.id, { title: draftTitle, tag: draftTag, description: draftDescription })
+    onUpdateCard(card.id, { title: draftTitle, tag: draftTag, description: draftDescription, buttons: draftButtons })
     setSaved(true)
     setTimeout(() => setSaved(false), 1500)
   }
@@ -80,20 +81,51 @@ function Card({
               />
           </label>
 
-          <div className="flex flex-wrap items-center gap-2">
-            {card.buttons.map((btn) => (
-              <a
-                key={btn.url}
-                href={btn.url}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="inline-flex items-center gap-1.5 rounded-lg bg-accent px-3 py-1.5 text-xs font-bold text-accent-foreground transition-colors hover:brightness-95"
-              >
-                {btn.label}
-                <ExternalLink className="size-3" aria-hidden />
-              </a>
-            ))}
-          </div>
+<div className="flex flex-col gap-2">
+      <span className="text-xs font-bold text-muted-foreground">卡片連結 (按鈕與網址)</span>
+      
+      {draftButtons.map((btn, index) => (
+        <div key={index} className="flex items-center gap-2">
+          <input
+            type="text"
+            placeholder="按鈕名稱"
+            value={btn.label}
+            onChange={(e) => {
+              const newBtns = [...draftButtons]
+              newBtns[index].label = e.target.value
+              setDraftButtons(newBtns)
+            }}
+            className="w-1/3 rounded-md border border-input bg-background px-3 py-1.5 text-xs font-bold text-foreground"
+          />
+          <input
+            type="text"
+            placeholder="https://..."
+            value={btn.url}
+            onChange={(e) => {
+              const newBtns = [...draftButtons]
+              newBtns[index].url = e.target.value
+              setDraftButtons(newBtns)
+            }}
+            className="flex-1 rounded-md border border-input bg-background px-3 py-1.5 text-xs text-foreground"
+          />
+          <button
+            type="button"
+            onClick={() => setDraftButtons(draftButtons.filter((_, i) => i !== index))}
+            className="text-xs text-red-500 hover:underline"
+          >
+            刪除
+          </button>
+        </div>
+      ))}
+
+      <button
+        type="button"
+        onClick={() => setDraftButtons([...draftButtons, { label: '新按鈕', url: '' }])}
+        className="self-start text-xs font-bold text-primary hover:underline mt-1"
+      >
+        + 新增一個連結按鈕
+      </button>
+    </div>
 
           <button
             type="button"
@@ -167,7 +199,7 @@ export function AccordionLinks({
 }: {
   cards: LinkCard[]
   isAdmin?: boolean
-  onUpdateCard?: (id: string, patch: Partial<Pick<LinkCard, 'title' | 'tag' | 'description'>>) => void
+  onUpdateCard?: (id: string, patch: Partial<Pick<LinkCard, 'title' | 'tag' | 'description' | 'buttons'>>) => void
   onAddCard?: () => void
   onDeleteCard?: (id: string) => void
 }) {
