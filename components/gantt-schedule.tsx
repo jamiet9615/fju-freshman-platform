@@ -22,15 +22,18 @@ function GanttRow({
   const [draftStart, setDraftStart] = useState(task.start)
   const [draftEnd, setDraftEnd] = useState(task.end)
 
-  // Recompute against a live "now" so bars shift as days pass.
-  const [now, setNow] = useState<Date | null>(null)
+  // ✅ 防崩潰修復：使用 isMounted 確保 SSR 與 Client 渲染完全一致
+  const [isMounted, setIsMounted] = useState(false)
+  const [now, setNow] = useState<Date>(() => new Date())
+
   useEffect(() => {
-    setNow(new Date())
+    setIsMounted(true)
     const id = setInterval(() => setNow(new Date()), 60_000)
     return () => clearInterval(id)
   }, [])
 
-  const c = computeGantt(task, now ?? new Date(task.start))
+  // 如果還在 SSR 伺服器端，先固定使用初始時間，避免前後端 HTML 不一致
+  const c = computeGantt(task, isMounted ? now : new Date(task.start))
   const isUrgent = c.status === 'danger' || c.status === 'warn'
 
   const handleSave = () => {
