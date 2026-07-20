@@ -182,7 +182,7 @@ function GanttRow({
         </span>
       </div>
     </li>
-  )
+  })
 
 export function GanttSchedule({
   tasks,
