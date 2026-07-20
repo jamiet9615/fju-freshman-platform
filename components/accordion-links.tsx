@@ -16,15 +16,16 @@ function Card({
   open: boolean
   onToggle: () => void
   isAdmin: boolean
-  onUpdateCard: (id: string, patch: Partial<Pick<LinkCard, 'title' | 'description'>>) => void
+  onUpdateCard: (id: string, patch: Partial<Pick<LinkCard, 'title' | 'tag' | 'description'>>) => void
   onDeleteCard: (id: string) => void
 }) {
   const [draftTitle, setDraftTitle] = useState(card.title)
+  const [draftTag, setDraftTag] = useState(card.tag) 
   const [draftDescription, setDraftDescription] = useState(card.description)
   const [saved, setSaved] = useState(false)
 
   const handleSave = () => {
-    onUpdateCard(card.id, { title: draftTitle, description: draftDescription })
+    onUpdateCard(card.id, { title: draftTitle, tag: draftTag, description: draftDescription })
     setSaved(true)
     setTimeout(() => setSaved(false), 1500)
   }
@@ -67,6 +68,16 @@ function Card({
               rows={3}
               className="resize-y rounded-md border border-input bg-background px-3 py-2 text-sm leading-relaxed text-foreground outline-none focus:border-primary focus:ring-2 focus:ring-primary/20"
             />
+          </label>
+          
+          <label className="flex flex-col gap-1 text-xs font-bold text-muted-foreground">
+            灰色標籤 (Tag)
+            <input
+              type="text"
+              value={draftTag}
+              onChange={(e) => setDraftTag(e.target.value)}
+              className="rounded-md border border-input bg-background px-3 py-2 text-sm font-bold text-primary outline-none focus:border-primary focus:ring-2 focus:ring-primary/20"
+              />
           </label>
 
           <div className="flex flex-wrap items-center gap-2">
@@ -156,7 +167,7 @@ export function AccordionLinks({
 }: {
   cards: LinkCard[]
   isAdmin?: boolean
-  onUpdateCard?: (id: string, patch: Partial<Pick<LinkCard, 'title' | 'description'>>) => void
+  onUpdateCard?: (id: string, patch: Partial<Pick<LinkCard, 'title' | 'tag' | 'description'>>) => void
   onAddCard?: () => void
   onDeleteCard?: (id: string) => void
 }) {
