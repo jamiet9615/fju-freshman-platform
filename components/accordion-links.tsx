@@ -38,7 +38,7 @@ function Card({
         <div className="flex flex-col gap-3 p-5">
           <div className="flex items-start justify-between gap-3">
             <span className="rounded-full bg-muted px-2 py-0.5 text-[0.7rem] text-muted-foreground">
-              {card.tag}
+              {draftTag || card.tag}
             </span>
             <button
               type="button"
