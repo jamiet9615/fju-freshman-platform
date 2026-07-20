@@ -183,13 +183,13 @@ function GanttRow({
 }
 
 export function GanttSchedule({
-  tasks,
+  tasks = [],
   isAdmin,
   onAdd,
   onDelete,
   onUpdate,
 }: {
-  tasks: GanttTask[]
+  tasks?: GanttTask[]
   isAdmin: boolean
   onAdd?: (task: Omit<GanttTask, 'id'>) => void
   onDelete?: (id: string) => void
@@ -264,7 +264,8 @@ export function GanttSchedule({
       {/* 自動排序與渲染列表 */}
       {(() => {
         const now = new Date()
-        const sortedTasks = [...tasks].sort((a, b) => {
+        const safeTasks = Array.isArray(tasks) ? tasks : []
+        const sortedTasks = [...safeTasks].sort((a, b) => {
           const aStart = new Date(a.start)
           const aEnd = new Date(a.end)
           const bStart = new Date(b.start)
