@@ -189,13 +189,13 @@ export function GanttSchedule({
   isAdmin,
   onAdd,
   onDelete,
-  onUpdate, // 👈 記得在解構中加入 onUpdate
+  onUpdate, // 👈 這裡！一定要在括號內加入 onUpdate
 }: {
   tasks: GanttTask[]
   isAdmin: boolean
   onAdd?: (task: Omit<GanttTask, 'id'>) => void
   onDelete?: (id: string) => void
-  onUpdate?: (id: string, updatedTask: Partial<GanttTask>) => void // 👈 定義型別
+  onUpdate?: (id: string, updatedTask: Partial<GanttTask>) => void // 👈 還有這裡！加上型別宣告
 }) {
   const [newLabel, setNewLabel] = useState('')
   const [newStart, setNewStart] = useState('')
