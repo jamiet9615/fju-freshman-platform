@@ -114,10 +114,7 @@ function GanttRow({
               'bg-muted text-muted-foreground border-border': c.status === 'future',
             })}
           >
-            {c.status === 'fine' && '進行中'}
-            {c.status === 'warn' && '即將到期'}
-            {c.status === 'danger' && '緊急壓線'}
-            {c.status === 'future' && '尚未開始'}
+            {c.statusLabel}
           </span>
 
           <span className="text-sm font-bold text-foreground">
@@ -175,7 +172,7 @@ function GanttRow({
 
       <div className="mt-1.5 flex items-center justify-between gap-2 text-xs font-medium text-muted-foreground">
         <span className={cn('font-bold', isUrgent && 'text-red-500')}>
-          {c.label}
+          {c.statusLabel}
         </span>
         <span className="font-bold text-foreground font-mono">
           {c.progress} %
