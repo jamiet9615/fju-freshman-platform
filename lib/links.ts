@@ -31,7 +31,7 @@ export const LINK_CARDS: LinkCard[] = [
   {
     id: 'myfju',
     title: '學生資訊平台 (MyFJU)',
-    tag: '成績 / 資安',
+    tag: '成績 / 常用',
     description:
       '管理個人數位足跡。新生必做的基本資料與照片上傳（會影響學生證領取），以及學期末的成績查詢都在這裡。',
     buttons: [{ label: '前往 MyFJU', url: 'https://sis.fju.edu.tw/#/' }],
@@ -61,7 +61,7 @@ export const LINK_CARDS: LinkCard[] = [
   {
     id: 'oj',
     title: '程式設計作業平台 (OJ)',
-    tag: '資安 / AI 專屬',
+    tag: '日常作業',
     description:
       '資安與 AI 科系必備的程式評測系統（Online Judge），用於提交程式作業並即時查看評測分數。',
     buttons: [{ label: '前往 Online Judge', url: 'https://oj.cyhsieh.com/' }],
