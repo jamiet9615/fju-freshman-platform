@@ -84,6 +84,8 @@ export function FreshmanApp({ initialSchedule }: { initialSchedule: ScheduleData
   const addGantt = (label: string, start: string, end: string) =>
     setGantt((prev) => [...prev, { id: newId(), label, start, end }])
   const deleteGantt = (id: string) => setGantt((prev) => prev.filter((g) => g.id !== id))
+  const updateGantt = (id: string, updatedTask: Partial<GanttTask>) =>
+  setGantt((prev) => prev.map((g) => (g.id === id ? { ...g, ...updatedTask } : g)))
 
   // Todo handlers
   const addTodo = (text: string) => setTodos((prev) => [...prev, { id: newId(), text }])
