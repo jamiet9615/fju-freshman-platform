@@ -108,10 +108,10 @@ function GanttRow({
           {/* 狀態標籤 (Badge) */}
           <span
             className={cn('rounded-md px-2 py-0.5 text-xs font-bold border', {
-              'bg-emerald-500/15 text-emerald-600 border-emerald-500/30 dark:text-emerald-400': c.status === 'fine',
+              'bg-emerald-500/15 text-emerald-600 border-emerald-500/30 dark:text-emerald-400': c.status === 'safe' || c.status === 'active',
               'bg-amber-500/15 text-amber-600 border-amber-500/30 dark:text-amber-400': c.status === 'warn',
               'bg-red-500/15 text-red-600 border-red-500/30 dark:text-red-400': c.status === 'danger',
-              'bg-muted text-muted-foreground border-border': c.status === 'future',
+              'bg-muted text-muted-foreground border-border': c.status === 'upcoming' || c.status === 'ended',
             })}
           >
             {c.statusLabel}
@@ -161,10 +161,10 @@ function GanttRow({
       >
         <div
           className={cn('absolute inset-y-0 left-0 transition-all duration-500 rounded-full', {
-            'bg-emerald-500': c.status === 'fine',
+            'bg-emerald-500': c.status === 'safe' || c.status === 'active',
             'bg-amber-500': c.status === 'warn',
             'bg-red-500': c.status === 'danger',
-            'bg-muted-foreground/30': c.status === 'future',
+            'bg-muted-foreground/30': c.status === 'upcoming' || c.status === 'ended',
           })}
           style={{ width: `${c.progress}%` }}
         />
