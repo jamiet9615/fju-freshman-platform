@@ -24,6 +24,14 @@ export function AdminModal({ open, onClose, schedule, onUpdated, onAuthed }: Adm
 
   if (!open) return null
 
+  // 🔽 新增/修改：登出處理函數（清空密碼與狀態）
+  const handleLogout = () => {
+    setAuthed(false)
+    setPassword('')
+    localStorage.removeItem('adminToken')
+    window.location.reload() // 強制刷頁重置狀態
+  }
+  
   const handleLogin = (e: React.FormEvent) => {
     e.preventDefault()
     // Client-side gate for UX; server re-verifies on every write.
