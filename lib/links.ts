@@ -41,7 +41,7 @@ export const LINK_CARDS: LinkCard[] = [
     title: '選課時程與學校行事曆',
     tag: '時程重要',
     description:
-      '掌握選課規則與重要日期。按鈕 A 查詢選課辦法與衝堂規則；按鈕 B 查看放假與重要大日程。',
+      '掌握選課規則、時間與重要日期。',
     buttons: [
       { label: '選課資訊網', url: 'https://course.fju.edu.tw/' },
       { label: '學校行事曆', url: 'http://www.secretariat.fju.edu.tw/article.jsp?articleID=8' },
@@ -52,7 +52,7 @@ export const LINK_CARDS: LinkCard[] = [
     title: '日常上課系統',
     tag: '日常上課',
     description:
-      '每天都會用到的兩大系統。按鈕 A 收取校務通知與選課確認信；按鈕 B 查看上課簡報、分組討論與繳交課堂作業。',
+      '老師通常會在 TronClass 發布重要資訊，而學校信箱是方便查看校內活動。',
     buttons: [
       { label: '學校 Email', url: 'https://outlook.cloud.microsoft/mail/' },
       { label: 'TronClass', url: 'https://elearn2.fju.edu.tw/#/' },
@@ -63,7 +63,7 @@ export const LINK_CARDS: LinkCard[] = [
     title: '程式設計作業平台 (OJ)',
     tag: '日常作業',
     description:
-      '資安與 AI 科系必備的程式評測系統（Online Judge），用於提交程式作業並即時查看評測分數。',
+      '程式設計會用的平台（Online Judge），用於提交程式作業。',
     buttons: [{ label: '前往 Online Judge', url: 'https://oj.cyhsieh.com/' }],
   },
   {
