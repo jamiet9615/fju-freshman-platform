@@ -161,7 +161,7 @@ export function FreshmanApp({ initialSchedule }: { initialSchedule: ScheduleData
           />
         </div>
         <aside className="flex flex-col gap-5 lg:sticky lg:top-6 lg:h-fit">
-          <GanttSchedule tasks={gantt} isAdmin={isAdmin} onAdd={addGantt} onDelete={deleteGantt} />
+          <GanttSchedule tasks={gantt} isAdmin={isAdmin} onAdd={addGantt} onDelete={deleteGantt} onUpdate={updateGantt}/>
           <TodoList todos={todos} isAdmin={isAdmin} onAdd={addTodo} onDelete={deleteTodo} />
           <p className="px-1 font-mono text-[0.7rem] text-muted-foreground" suppressHydrationWarning>
             資料更新：{lastUpdated.toLocaleDateString('zh-TW')}
