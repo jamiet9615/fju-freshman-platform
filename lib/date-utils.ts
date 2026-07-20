@@ -17,14 +17,24 @@ export interface GanttComputed {
 
 const DAY = 1000 * 60 * 60 * 24
 
-function startOfDay(d: Date): number {
-  return new Date(d.getFullYear(), d.getMonth(), d.getDate()).getTime()
+function startOfDay(d: Date | string): number {
+  let dateObj: Date
+  if (typeof d === 'string') {
+    // 將 "2026-09-01" 替換斜線避免 UTC 時區偏差
+    dateObj = new Date(d.replace(/-/g, '/'))
+  } else {
+    dateObj = d
+  }
+  if (isNaN(dateObj.getTime())) {
+    dateObj = new Date() // 若無效日期則給予今日預設值，防止 NaN
+  }
+  return new Date(dateObj.getFullYear(), dateObj.getMonth(), dateObj.getDate()).getTime()
 }
 
 export function computeGantt(task: GanttTask, now: Date = new Date()): GanttComputed {
   const today = startOfDay(now)
-  const start = startOfDay(new Date(task.start))
-  const end = startOfDay(new Date(task.end))
+  const start = startOfDay(task.start)
+  const end = startOfDay(task.end)
 
   const daysUntilStart = Math.max(0, Math.round((start - today) / DAY))
   const daysLeft = Math.round((end - today) / DAY)
@@ -35,8 +45,8 @@ export function computeGantt(task: GanttTask, now: Date = new Date()): GanttComp
     return {
       status: 'upcoming',
       progress: 0,
-      daysLeft,
-      daysUntilStart,
+      daysLeft: isNaN(daysLeft) ? 0 : daysLeft,
+      daysUntilStart: isNaN(daysUntilStart) ? 0 : daysUntilStart,
       statusLabel: `${daysUntilStart} 天後開始`,
       colorVar: 'var(--color-status-active)',
     }
@@ -47,7 +57,7 @@ export function computeGantt(task: GanttTask, now: Date = new Date()): GanttComp
     return {
       status: 'ended',
       progress: 100,
-      daysLeft,
+      daysLeft: isNaN(daysLeft) ? 0 : daysLeft,
       daysUntilStart: 0,
       statusLabel: '已結束',
       colorVar: 'var(--color-muted-foreground)',
@@ -56,10 +66,12 @@ export function computeGantt(task: GanttTask, now: Date = new Date()): GanttComp
 
   // In window
   const elapsed = Math.round((today - start) / DAY)
-  const progress = Math.min(100, Math.max(4, Math.round((elapsed / total) * 100)))
+  const progressCalc = Math.round((elapsed / total) * 100)
+  const progress = isNaN(progressCalc) ? 0 : Math.min(100, Math.max(4, progressCalc))
 
   let status: GanttStatus = 'active'
   let colorVar = 'var(--color-status-active)'
+
   if (daysLeft <= 2) {
     status = 'danger'
     colorVar = 'var(--color-status-danger)'
@@ -74,7 +86,7 @@ export function computeGantt(task: GanttTask, now: Date = new Date()): GanttComp
   return {
     status,
     progress,
-    daysLeft,
+    daysLeft: isNaN(daysLeft) ? 0 : daysLeft,
     daysUntilStart: 0,
     statusLabel: `剩 ${daysLeft} 天`,
     colorVar,
