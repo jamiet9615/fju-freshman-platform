@@ -100,18 +100,18 @@ function GanttRow({
     )
   }
 
-  // 🔽 顯示模式 UI（恢復美化色彩）
+  // 🔽 顯示模式 UI（補回質感底框與顏色）
   return (
-    <li className="rounded-lg border border-border bg-card p-3 shadow-sm transition-all hover:shadow-md">
+    <li className="rounded-lg border-2 border-border/80 bg-muted/30 p-3 shadow-sm transition-all hover:border-primary/40 hover:bg-muted/50">
       <div className="mb-2 flex items-center justify-between gap-2">
         <div className="flex items-center gap-2">
           {/* 狀態標籤 (Badge) */}
           <span
-            className={cn('rounded-md px-2 py-0.5 text-xs font-bold', {
-              'bg-emerald-500/10 text-emerald-600 dark:text-emerald-400': c.status === 'fine',
-              'bg-amber-500/10 text-amber-600 dark:text-amber-400': c.status === 'warn',
-              'bg-red-500/10 text-red-600 dark:text-red-400': c.status === 'danger',
-              'bg-muted text-muted-foreground': c.status === 'future',
+            className={cn('rounded-md px-2 py-0.5 text-xs font-bold border', {
+              'bg-emerald-500/15 text-emerald-600 border-emerald-500/30 dark:text-emerald-400': c.status === 'fine',
+              'bg-amber-500/15 text-amber-600 border-amber-500/30 dark:text-amber-400': c.status === 'warn',
+              'bg-red-500/15 text-red-600 border-red-500/30 dark:text-red-400': c.status === 'danger',
+              'bg-muted text-muted-foreground border-border': c.status === 'future',
             })}
           >
             {c.status === 'fine' && '進行中'}
@@ -156,7 +156,7 @@ function GanttRow({
 
       {/* 彩色進度條 Track */}
       <div
-        className="relative h-2.5 w-full overflow-hidden rounded-full bg-secondary"
+        className="relative h-2.5 w-full overflow-hidden rounded-full bg-border/60"
         role="progressbar"
         aria-valuenow={c.progress}
         aria-valuemin={0}
@@ -183,7 +183,6 @@ function GanttRow({
       </div>
     </li>
   )
-}
 
 export function GanttSchedule({
   tasks,
