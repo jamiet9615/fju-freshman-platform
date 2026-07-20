@@ -180,9 +180,28 @@ export function GanttSchedule({
           </div>
         </div>
       )}
+      
+      {/* 自動排序：進行中排最前面 > 未來依日期近到遠 */}
+  {(() => {
+    const now = new Date()
+    const sortedTasks = [...tasks].sort((a, b) => {
+      const aStart = new Date(a.start)
+      const aEnd = new Date(a.end)
+      const bStart = new Date(b.start)
+      const bEnd = new Date(b.end)
+
+      const aOngoing = now >= aStart && now <= aEnd
+      const bOngoing = now >= bStart && now <= bEnd
+
+      if (aOngoing && !bOngoing) return -1
+      if (!aOngoing && bOngoing) return 1
+      if (aOngoing && bOngoing) return aEnd.getTime() - bEnd.getTime()
+      return aStart.getTime() - bStart.getTime()
+    })
+    return (
 
       <ul className="flex flex-col gap-2.5">
-        {tasks.map((t) => (
+        {sortedTasks.map((t) => (
           <GanttRow key={t.id} task={t} isAdmin={isAdmin} onDelete={onDelete ?? (() => {})} />
         ))}
       </ul>
