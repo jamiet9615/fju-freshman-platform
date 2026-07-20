@@ -100,13 +100,31 @@ function GanttRow({
     )
   }
 
-  // 🔽 顯示模式 UI (保持原本樣式)
+  // 🔽 顯示模式 UI（恢復美化色彩）
   return (
-    <li className="rounded-lg border border-border bg-muted/40 p-3">
+    <li className="rounded-lg border border-border bg-card p-3 shadow-sm transition-all hover:shadow-md">
       <div className="mb-2 flex items-center justify-between gap-2">
-        <span className="text-sm font-bold text-foreground">
-          {task.label}
-        </span>
+        <div className="flex items-center gap-2">
+          {/* 狀態標籤 (Badge) */}
+          <span
+            className={cn('rounded-md px-2 py-0.5 text-xs font-bold', {
+              'bg-emerald-500/10 text-emerald-600 dark:text-emerald-400': c.status === 'fine',
+              'bg-amber-500/10 text-amber-600 dark:text-amber-400': c.status === 'warn',
+              'bg-red-500/10 text-red-600 dark:text-red-400': c.status === 'danger',
+              'bg-muted text-muted-foreground': c.status === 'future',
+            })}
+          >
+            {c.status === 'fine' && '進行中'}
+            {c.status === 'warn' && '即將到期'}
+            {c.status === 'danger' && '緊急壓線'}
+            {c.status === 'future' && '尚未開始'}
+          </span>
+
+          <span className="text-sm font-bold text-foreground">
+            {task.label}
+          </span>
+        </div>
+
         <div className="flex items-center gap-2">
           <span className="font-mono text-[0.7rem] text-muted-foreground">
             {formatRange(task)}
@@ -136,41 +154,30 @@ function GanttRow({
         </div>
       </div>
 
-      {/* progress track */}
+      {/* 彩色進度條 Track */}
       <div
-        className="relative h-3 w-full overflow-hidden rounded-full bg-border/70"
+        className="relative h-2.5 w-full overflow-hidden rounded-full bg-secondary"
         role="progressbar"
         aria-valuenow={c.progress}
         aria-valuemin={0}
         aria-valuemax={100}
-        aria-label={`${task.label} 進度`}
       >
         <div
-          className={cn(
-            'absolute inset-y-0 left-0 transition-all duration-300',
-            {
-              'bg-primary': c.status === 'fine',
-              'bg-amber-500': c.status === 'warn',
-              'bg-destructive': c.status === 'danger',
-              'bg-muted-foreground/40': c.status === 'future',
-            }
-          )}
+          className={cn('absolute inset-y-0 left-0 transition-all duration-500 rounded-full', {
+            'bg-emerald-500': c.status === 'fine',
+            'bg-amber-500': c.status === 'warn',
+            'bg-red-500': c.status === 'danger',
+            'bg-muted-foreground/30': c.status === 'future',
+          })}
           style={{ width: `${c.progress}%` }}
         />
-        {c.status === 'future' && (
-          <div className="absolute inset-0 flex items-center justify-center">
-            <span className="text-[0.65rem] font-black text-muted-foreground/70">
-              UPCOMING
-            </span>
-          </div>
-        )}
       </div>
 
       <div className="mt-1.5 flex items-center justify-between gap-2 text-xs font-medium text-muted-foreground">
-        <span className={cn('font-bold', isUrgent && 'text-destructive')}>
+        <span className={cn('font-bold', isUrgent && 'text-red-500')}>
           {c.label}
         </span>
-        <span className="font-bold text-foreground">
+        <span className="font-bold text-foreground font-mono">
           {c.progress} %
         </span>
       </div>
