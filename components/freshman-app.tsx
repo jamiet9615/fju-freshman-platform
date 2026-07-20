@@ -90,7 +90,7 @@ export function FreshmanApp({ initialSchedule }: { initialSchedule: ScheduleData
   const deleteTodo = (id: string) => setTodos((prev) => prev.filter((t) => t.id !== id))
 
   // Card handlers
-  const updateCard = (id: string, patch: Partial<Pick<LinkCard, 'title' | 'description'>>) =>
+  const updateCard = (id: string, patch: Partial<Pick<LinkCard, 'title' | 'tag' | 'description' | 'buttons'>>) =>
     setCards((prev) => prev.map((c) => (c.id === id ? { ...c, ...patch } : c)))
   const addCard = () =>
     setCards((prev) => [
