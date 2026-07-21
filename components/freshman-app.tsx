@@ -45,8 +45,10 @@ export function FreshmanApp({ initialSchedule }: { initialSchedule: ScheduleData
       if (g) setGantt(JSON.parse(g))
       const t = localStorage.getItem(LS_TODOS)
       if (t) setTodos(JSON.parse(t))
-      //const c = localStorage.getItem(LS_CARDS)
-      //if (c) setCards(JSON.parse(c))
+      
+      // 1. 【修復】解除卡片的讀取註解
+      const c = localStorage.getItem(LS_CARDS)
+      if (c) setCards(JSON.parse(c))
     } catch {
       /* ignore */
     }
@@ -71,21 +73,24 @@ export function FreshmanApp({ initialSchedule }: { initialSchedule: ScheduleData
     }
   }, [todos, hydrated])
 
+  // 2. 【修復】新增 Cards 的持久化存檔邏輯
   useEffect(() => {
+    if (!hydrated) return
     try {
-      // 刪除瀏覽器快取，確保正常模式與所有人都能同步 lib/links.ts 的最新修改
-      localStorage.removeItem(LS_CARDS)
+      localStorage.setItem(LS_CARDS, JSON.stringify(cards))
     } catch {
       /* ignore */
     }
-  }, [])
+  }, [cards, hydrated])
+
+  // （已移除原本會被強行 removeItem(LS_CARDS) 的 useEffect）
 
   // Gantt handlers
   const addGantt = (label: string, start: string, end: string) =>
     setGantt((prev) => [...prev, { id: newId(), label, start, end }])
   const deleteGantt = (id: string) => setGantt((prev) => prev.filter((g) => g.id !== id))
   const updateGantt = (id: string, updatedTask: Partial<GanttTask>) =>
-  setGantt((prev) => prev.map((g) => (g.id === id ? { ...g, ...updatedTask } : g)))
+    setGantt((prev) => prev.map((g) => (g.id === id ? { ...g, ...updatedTask } : g)))
 
   // Todo handlers
   const addTodo = (text: string) => setTodos((prev) => [...prev, { id: newId(), text }])
