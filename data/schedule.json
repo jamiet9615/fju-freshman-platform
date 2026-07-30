@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-07-29T17:20:03.137762Z",
+  "updatedAt": "2026-07-30T17:40:43.524611Z",
   "updatedBy": "ai-agent",
   "gantt": [
     {
@@ -24,7 +24,7 @@
   "todos": [
     {
       "id": "ai-0",
-      "text": "完成單一帳號（LDAP）啟用。"
+      "text": "取得學號後立即啟用單一帳號（LDAP）。"
     },
     {
       "id": "ai-1",
