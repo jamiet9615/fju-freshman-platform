@@ -125,7 +125,7 @@ export function FreshmanApp({ initialSchedule }: { initialSchedule: ScheduleData
               輔大新生全攻略捷徑
             </h1>
             <p className="text-sm text-muted-foreground">
-              {isAdmin ? '管理員模式：可即時新增、編輯與刪除內容' : '點擊下方卡片查看詳細介紹與重要連結'}
+              點擊下方卡片查看詳細介紹與重要連結，或使用右側按鈕自訂個人連結
             </p>
           </div>
         </div>
@@ -133,7 +133,7 @@ export function FreshmanApp({ initialSchedule }: { initialSchedule: ScheduleData
           <div className="flex items-center gap-2 self-start sm:self-auto">
             <span className="inline-flex items-center gap-1.5 rounded-lg bg-primary/10 px-3 py-2 text-sm font-bold text-primary">
               <ShieldUser className="size-4" aria-hidden />
-              管理員模式
+              自訂/新增個人連結
             </span>
             <button
               type="button"
