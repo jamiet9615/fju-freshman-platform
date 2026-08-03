@@ -36,6 +36,19 @@ export function FreshmanApp({ initialSchedule }: { initialSchedule: ScheduleData
   const [gantt, setGantt] = useState<GanttTask[]>(current.gantt)
   const [todos, setTodos] = useState<TodoItem[]>(current.todos)
   const [cards, setCards] = useState<LinkCard[]>(LINK_CARDS)
+  const [cards, setCards] = useState<LinkCard[]>(() => {
+    if (typeof window !== 'undefined') {
+      const saved = localStorage.getItem(LS_CARDS)
+        if (saved) {
+          try {
+            return JSON.parse(saved)
+          } catch (e) {
+            console.error('Failed to parse saved cards:', e)
+          }
+        }
+    }
+    return LINK_CARDS
+  })
   const [hydrated, setHydrated] = useState(false)
 
   // Load saved edits once on mount (per-browser persistence).
@@ -98,7 +111,19 @@ export function FreshmanApp({ initialSchedule }: { initialSchedule: ScheduleData
 
   // Card handlers
   const updateCard = (id: string, patch: Partial<Pick<LinkCard, 'title' | 'tag' | 'description' | 'buttons'>>) =>
-    setCards((prev) => prev.map((c) => (c.id === id ? { ...c, ...patch } : c)))
+  setCards((prev) =>
+    prev.map((c) => {
+      if (c.id === id) {
+        return {
+          ...c,
+          ...patch,
+          // 如果 patch 有傳入 buttons，確保合併舊有與新增的連結；否則保留原本的
+          buttons: patch.buttons ? patch.buttons : c.buttons,
+        }
+      }
+      return c
+    })
+  )
   const addCard = () =>
     setCards((prev) => [
       ...prev,
@@ -147,9 +172,19 @@ export function FreshmanApp({ initialSchedule }: { initialSchedule: ScheduleData
         ) : (
           <button
             type="button"
-            onClick={() => setAdminOpen(true)}
+            onClick={() => {
+              const saved = localStorage.getItem(LS_CARDS)
+                if (saved) {
+                  try {
+                    setCards(JSON.parse(saved))
+                  } catch (e) {
+                    console.error('Failed to reload cards:', e)
+                  }
+                }
+              setIsAdmin(true)
+            }}
             className="inline-flex items-center gap-2 self-start rounded-lg border border-primary/30 bg-card px-4 py-2 text-sm font-bold text-primary shadow-sm transition-colors hover:bg-primary hover:text-primary-foreground sm:self-auto"
-          >
+            >
             <ShieldUser className="size-4" aria-hidden />
             新增/自訂連結
           </button>
