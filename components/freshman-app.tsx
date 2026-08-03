@@ -151,7 +151,7 @@ export function FreshmanApp({ initialSchedule }: { initialSchedule: ScheduleData
             className="inline-flex items-center gap-2 self-start rounded-lg border border-primary/30 bg-card px-4 py-2 text-sm font-bold text-primary shadow-sm transition-colors hover:bg-primary hover:text-primary-foreground sm:self-auto"
           >
             <ShieldUser className="size-4" aria-hidden />
-            管理員登入
+            新增/自訂連結
           </button>
         )}
       </header>
