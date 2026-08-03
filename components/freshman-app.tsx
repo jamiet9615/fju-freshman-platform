@@ -1,4 +1,4 @@
-"use client"; //
+'use client'
 
 import { useEffect, useState } from 'react'
 import useSWR from 'swr'
@@ -36,19 +36,6 @@ export function FreshmanApp({ initialSchedule }: { initialSchedule: ScheduleData
   const [gantt, setGantt] = useState<GanttTask[]>(current.gantt)
   const [todos, setTodos] = useState<TodoItem[]>(current.todos)
   const [cards, setCards] = useState<LinkCard[]>(LINK_CARDS)
-  const [cards, setCards] = useState<LinkCard[]>(() => {
-    if (typeof window !== 'undefined') {
-      const saved = localStorage.getItem(LS_CARDS)
-        if (saved) {
-          try {
-            return JSON.parse(saved)
-          } catch (e) {
-            console.error('Failed to parse saved cards:', e)
-          }
-        }
-    }
-    return LINK_CARDS
-  })
   const [hydrated, setHydrated] = useState(false)
 
   // Load saved edits once on mount (per-browser persistence).
@@ -111,19 +98,7 @@ export function FreshmanApp({ initialSchedule }: { initialSchedule: ScheduleData
 
   // Card handlers
   const updateCard = (id: string, patch: Partial<Pick<LinkCard, 'title' | 'tag' | 'description' | 'buttons'>>) =>
-  setCards((prev) =>
-    prev.map((c) => {
-      if (c.id === id) {
-        return {
-          ...c,
-          ...patch,
-          // 如果 patch 有傳入 buttons，確保合併舊有與新增的連結；否則保留原本的
-          buttons: patch.buttons ? patch.buttons : c.buttons,
-        }
-      }
-      return c
-    })
-  )
+    setCards((prev) => prev.map((c) => (c.id === id ? { ...c, ...patch } : c)))
   const addCard = () =>
     setCards((prev) => [
       ...prev,
@@ -150,7 +125,7 @@ export function FreshmanApp({ initialSchedule }: { initialSchedule: ScheduleData
               輔大新生全攻略捷徑
             </h1>
             <p className="text-sm text-muted-foreground">
-              點擊下方卡片查看詳細介紹與重要連結，或使用右側按鈕自訂個人連結
+              {isAdmin ? '管理員模式：可即時新增、編輯與刪除內容' : '點擊下方卡片查看詳細介紹與重要連結'}
             </p>
           </div>
         </div>
@@ -158,7 +133,7 @@ export function FreshmanApp({ initialSchedule }: { initialSchedule: ScheduleData
           <div className="flex items-center gap-2 self-start sm:self-auto">
             <span className="inline-flex items-center gap-1.5 rounded-lg bg-primary/10 px-3 py-2 text-sm font-bold text-primary">
               <ShieldUser className="size-4" aria-hidden />
-              自訂/新增個人連結
+              管理員模式
             </span>
             <button
               type="button"
@@ -172,21 +147,11 @@ export function FreshmanApp({ initialSchedule }: { initialSchedule: ScheduleData
         ) : (
           <button
             type="button"
-            onClick={() => {
-              const saved = localStorage.getItem(LS_CARDS)
-                if (saved) {
-                  try {
-                    setCards(JSON.parse(saved))
-                  } catch (e) {
-                    console.error('Failed to reload cards:', e)
-                  }
-                }
-              setIsAdmin(true)
-            }}
+            onClick={() => setAdminOpen(true)}
             className="inline-flex items-center gap-2 self-start rounded-lg border border-primary/30 bg-card px-4 py-2 text-sm font-bold text-primary shadow-sm transition-colors hover:bg-primary hover:text-primary-foreground sm:self-auto"
-            >
+          >
             <ShieldUser className="size-4" aria-hidden />
-            新增/自訂連結
+            管理員登入
           </button>
         )}
       </header>
