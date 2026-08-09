@@ -46,7 +46,18 @@ export function FreshmanApp({ initialSchedule }: { initialSchedule: ScheduleData
       const t = localStorage.getItem(LS_TODOS)
       if (t) setTodos(JSON.parse(t))
       const c = localStorage.getItem(LS_CARDS)
-      if (c) setCards(JSON.parse(c))
+      if (c) {
+        // Force-sync default links without deleting the user's custom cards.
+        // Start from saved cards (preserves user edits + custom cards),
+        // then append any default card whose id is missing.
+        const saved: LinkCard[] = JSON.parse(c)
+        const savedIds = new Set(saved.map((card) => card.id))
+        const merged = [
+          ...saved,
+          ...LINK_CARDS.filter((defaultCard) => !savedIds.has(defaultCard.id)),
+        ]
+        setCards(merged)
+      }
     } catch {
       /* ignore */
     }
@@ -140,7 +151,7 @@ export function FreshmanApp({ initialSchedule }: { initialSchedule: ScheduleData
         ) : (
           <button
             type="button"
-            onClick={() => setAdminOpen(true)}
+            onClick={() => setIsAdmin(true)}
             className="inline-flex items-center gap-2 self-start rounded-lg border border-primary/30 bg-card px-4 py-2 text-sm font-bold text-primary shadow-sm transition-colors hover:bg-primary hover:text-primary-foreground sm:self-auto"
           >
             <ShieldUser className="size-4" aria-hidden />

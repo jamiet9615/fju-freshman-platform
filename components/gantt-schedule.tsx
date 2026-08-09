@@ -5,6 +5,14 @@ import { Zap, Plus, X } from 'lucide-react'
 import type { GanttTask } from '@/lib/types'
 import { computeGantt, formatRange } from '@/lib/date-utils'
 
+// Fixed default task that should always appear in the schedule list.
+const DEFAULT_GANTT_TASK: GanttTask = {
+  id: 'default-all-gen',
+  label: '全人課程志願選填',
+  start: '2026-08-27',
+  end: '2026-09-01',
+}
+
 function GanttRow({
   task,
   isAdmin,
@@ -92,6 +100,13 @@ export function GanttSchedule({
   onDelete?: (id: string) => void
 }) {
   const [formOpen, setFormOpen] = useState(false)
+
+  // Ensure the fixed default task is always present (without duplicating it
+  // if the saved data already contains it).
+  const displayedTasks = tasks.some((t) => t.id === DEFAULT_GANTT_TASK.id)
+    ? tasks
+    : [DEFAULT_GANTT_TASK, ...tasks]
+
   const [label, setLabel] = useState('')
   const [start, setStart] = useState('')
   const [end, setEnd] = useState('')
@@ -102,7 +117,9 @@ export function GanttSchedule({
     setEnd('')
   }
 
-  const submit = () => {
+  const handleAdd = (e: React.MouseEvent<HTMLButtonElement>) => {
+    e.preventDefault()
+    e.stopPropagation()
     if (!label.trim() || !start || !end || !onAdd) return
     onAdd(label.trim(), start, end)
     resetForm()
@@ -162,7 +179,7 @@ export function GanttSchedule({
           <div className="flex gap-2">
             <button
               type="button"
-              onClick={submit}
+              onClick={handleAdd}
               className="flex-1 rounded-md bg-primary px-3 py-1.5 text-xs font-bold text-primary-foreground transition-opacity hover:opacity-90"
             >
               確認新增
@@ -182,7 +199,7 @@ export function GanttSchedule({
       )}
 
       <ul className="flex flex-col gap-2.5">
-        {tasks.map((t) => (
+        {displayedTasks.map((t) => (
           <GanttRow key={t.id} task={t} isAdmin={isAdmin} onDelete={onDelete ?? (() => {})} />
         ))}
       </ul>

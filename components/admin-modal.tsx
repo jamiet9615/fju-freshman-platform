@@ -1,7 +1,7 @@
 'use client'
 
-import { useState } from 'react'
-import { X, Lock, Sparkles, Save, Loader2, ShieldCheck } from 'lucide-react'
+import { useEffect, useState } from 'react'
+import { X, Sparkles, Save, Loader2, ShieldCheck } from 'lucide-react'
 import type { ScheduleData } from '@/lib/types'
 
 interface AdminModalProps {
@@ -13,29 +13,23 @@ interface AdminModalProps {
 }
 
 export function AdminModal({ open, onClose, schedule, onUpdated, onAuthed }: AdminModalProps) {
-  const [password, setPassword] = useState('')
-  const [authed, setAuthed] = useState(false)
-  const [authError, setAuthError] = useState('')
+  // Passwordless: the control panel is always available once the modal opens.
+  const password = ''
 
   const [draftGantt, setDraftGantt] = useState(schedule.gantt)
   const [saving, setSaving] = useState(false)
   const [syncing, setSyncing] = useState(false)
   const [message, setMessage] = useState<{ type: 'ok' | 'err'; text: string } | null>(null)
 
-  if (!open) return null
-
-  const handleLogin = (e: React.FormEvent) => {
-    e.preventDefault()
-    // Client-side gate for UX; server re-verifies on every write.
-    if (password === '1150912') {
-      setAuthed(true)
-      setAuthError('')
+  useEffect(() => {
+    if (open) {
       setDraftGantt(schedule.gantt)
       onAuthed?.()
-    } else {
-      setAuthError('密碼錯誤，請重新輸入。')
     }
-  }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [open])
+
+  if (!open) return null
 
   const updateDate = (id: string, field: 'start' | 'end', value: string) => {
     setDraftGantt((prev) => prev.map((g) => (g.id === id ? { ...g, [field]: value } : g)))
@@ -96,8 +90,8 @@ export function AdminModal({ open, onClose, schedule, onUpdated, onAuthed }: Adm
       >
         <div className="mb-4 flex items-center justify-between">
           <h2 className="flex items-center gap-2 text-lg font-bold text-primary">
-            {authed ? <ShieldCheck className="size-5" /> : <Lock className="size-5" />}
-            {authed ? '接班管理員控制台' : '管理員登入'}
+            <ShieldCheck className="size-5" />
+            接班管理員控制台
           </h2>
           <button
             type="button"
@@ -109,29 +103,7 @@ export function AdminModal({ open, onClose, schedule, onUpdated, onAuthed }: Adm
           </button>
         </div>
 
-        {!authed ? (
-          <form onSubmit={handleLogin} className="flex flex-col gap-3">
-            <p className="text-sm text-muted-foreground">
-              輸入今年度驗證密碼以修改網站時程與啟動 AI 對時。
-            </p>
-            <input
-              type="password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              placeholder="請輸入管理密碼"
-              autoFocus
-              className="rounded-lg border border-input bg-background px-4 py-2.5 text-foreground outline-none focus:border-primary focus:ring-2 focus:ring-primary/20"
-            />
-            {authError && <p className="text-sm text-destructive">{authError}</p>}
-            <button
-              type="submit"
-              className="rounded-lg bg-primary px-4 py-2.5 font-bold text-primary-foreground transition-opacity hover:opacity-90"
-            >
-              登入
-            </button>
-          </form>
-        ) : (
-          <div className="flex flex-col gap-5">
+        <div className="flex flex-col gap-5">
             {/* AI agent trigger */}
             <div className="rounded-xl border border-border bg-muted/50 p-4">
               <div className="mb-1 flex items-center gap-2">
@@ -202,8 +174,7 @@ export function AdminModal({ open, onClose, schedule, onUpdated, onAuthed }: Adm
                 {message.text}
               </p>
             )}
-          </div>
-        )}
+        </div>
       </div>
     </div>
   )
