@@ -22,9 +22,11 @@ function newId() {
 }
 
 export function FreshmanApp({ initialSchedule }: { initialSchedule: ScheduleData }) {
-  const { data: schedule, mutate } = useSWR<ScheduleData>('/api/schedule', fetcher, {
-    fallbackData: initialSchedule,
-    revalidateOnFocus: false,
+ const { data: schedule, mutate } = useSWR<ScheduleData>('/api/schedule', fetcher, {
+  fallbackData: initialSchedule,
+  revalidateOnFocus: false,
+  revalidateOnReconnect: false,
+  revalidateIfStale: false, // 避免頁面載入後自動在背景重新請求 API 覆蓋當前輸入
   })
   const [adminOpen, setAdminOpen] = useState(false)
   const [isAdmin, setIsAdmin] = useState(false)
