@@ -40,18 +40,29 @@ export function FreshmanApp({ initialSchedule }: { initialSchedule: ScheduleData
 
   // Load saved edits once on mount (per-browser persistence).
   useEffect(() => {
-    try {
-      const g = localStorage.getItem(LS_GANTT)
-      if (g) setGantt(JSON.parse(g))
-      const t = localStorage.getItem(LS_TODOS)
-      if (t) setTodos(JSON.parse(t))
-      
-      // 1. 【修復】解除卡片的讀取註解
-      const c = localStorage.getItem(LS_CARDS)
-      if (c) setCards(JSON.parse(c))
-    } catch {
-      /* ignore */
+  try {
+    const g = localStorage.getItem(LS_GANTT)
+    if (g) setGantt(JSON.parse(g))
+    const t = localStorage.getItem(LS_TODOS)
+    if (t) setTodos(JSON.parse(t))
+
+    const c = localStorage.getItem(LS_CARDS)
+    if (c) {
+      let parsed = JSON.parse(c)
+      // 檢查第一張卡片，如果沒有「前往輔大官網」，自動補上最新按鈕
+      parsed = parsed.map((card: LinkCard) => {
+        if (card.id === 'freshman') {
+          return {
+            ...card,
+            buttons: LINK_CARDS[0].buttons, // 自動同步最新按鈕設定
+          }
+        }
+        return card
+      })
+      setCards(parsed)
+      localStorage.setItem(LS_CARDS, JSON.stringify(parsed))
     }
+  } catch {/* ignore */}
     setHydrated(true)
   }, [])
 
