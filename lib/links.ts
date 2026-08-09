@@ -56,10 +56,12 @@ export const LINK_CARDS: LinkCard[] = [
     title: '日常上課系統',
     tag: '日常上課',
     description:
-      '老師通常會在 TronClass 發布重要資訊，而學校信箱是方便查看校內活動。',
+      '老師通常會在 TronClass 發布重要資訊，而學校信箱是方便查看校內活動。自學點數FB可以獲得自學點數，而自學點數網站可以查詢點數',
     buttons: [
       { label: '學校 Email', url: 'https://outlook.cloud.microsoft/mail/' },
       { label: 'TronClass', url: 'https://elearn2.fju.edu.tw/#/' },
+      { label: '自學點數FB', url: 'https://www.facebook.com/SMART.FJUSLC/?locale=zh_TW' }
+      { label: '自學點數查詢', url: 'https://engnet.fju.edu.tw/accountPoint.asp?' }
     ],
   },
   {
