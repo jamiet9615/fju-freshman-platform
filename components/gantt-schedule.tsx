@@ -204,6 +204,7 @@ export function GanttSchedule({
 
   const handleAdd = (e: React.FormEvent) => {
     e.preventDefault()
+    e.stopPropagation()
     if (onAdd && newLabel && newStart && newEnd) {
       onAdd({ label: newLabel, start: newStart, end: newEnd })
       setNewLabel('')
