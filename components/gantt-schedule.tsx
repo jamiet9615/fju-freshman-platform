@@ -118,12 +118,14 @@ export function GanttSchedule({
   }
 
   const handleAdd = (e: React.MouseEvent<HTMLButtonElement>) => {
-    e.preventDefault()
-    e.stopPropagation()
-    if (!label.trim() || !start || !end || !onAdd) return
-    onAdd(label.trim(), start, end)
-    resetForm()
-    setFormOpen(false)
+  e.preventDefault()
+  e.stopPropagation()
+  
+  if (!label.trim() || !start || !end || !onAdd) return
+
+  onAdd(label.trim(), start, end)
+  resetForm()
+  setFormOpen(false)
   }
 
   return (
