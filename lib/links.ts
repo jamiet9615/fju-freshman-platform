@@ -13,6 +13,20 @@ export interface LinkCard {
 
 export const LINK_CARDS: LinkCard[] = [
   {
+    id: 'fju-official',
+    title: '輔大官網',
+    tag: '官網',
+    description: '天主教輔仁大學官方網站。',
+    buttons: [{ label: '前往輔大官網', url: 'https://www.fju.edu.tw/' }],
+  },
+  {
+    id: 'fju-ais',
+    title: '我們系網',
+    tag: '系網',
+    description: '人工智慧與資訊安全學系官方網站。',
+    buttons: [{ label: '前往系網', url: 'https://ais.fju.edu.tw/' }],
+  },
+  {
     id: 'freshman',
     title: '輔大新生專區',
     tag: '必看',
