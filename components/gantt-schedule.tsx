@@ -210,7 +210,8 @@ export function GanttSchedule({
     e.preventDefault()
     e.stopPropagation()
     if (onAdd && newLabel.trim() && newStart && newEnd) {
-      onAdd({ label: newLabel.trim(), start: newStart, end: newEnd })
+      // ✅ 正確：拆開成三個獨立參數傳給父層
+      onAdd(newLabel.trim(), newStart, newEnd)
       setNewLabel('')
       setNewStart('')
       setNewEnd('')
