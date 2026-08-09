@@ -60,8 +60,8 @@ export const LINK_CARDS: LinkCard[] = [
     buttons: [
       { label: '學校 Email', url: 'https://outlook.cloud.microsoft/mail/' },
       { label: 'TronClass', url: 'https://elearn2.fju.edu.tw/#/' },
-      { label: '自學點數FB', url: 'https://www.facebook.com/SMART.FJUSLC/?locale=zh_TW' }
-      { label: '自學點數查詢', url: 'https://engnet.fju.edu.tw/accountPoint.asp?' }
+      { label: '自學點數FB', url: 'https://www.facebook.com/SMART.FJUSLC/?locale=zh_TW' },
+      { label: '自學點數查詢', url: 'https://engnet.fju.edu.tw/accountPoint.asp?' },
     ],
   },
   {
