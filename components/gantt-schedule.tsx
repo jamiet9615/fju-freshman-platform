@@ -37,14 +37,18 @@ function GanttRow({
   const isUrgent = c.status === 'danger' || c.status === 'warn'
 
   const handleSave = () => {
-    if (onUpdate) {
-      onUpdate(task.id, {
-        label: draftLabel,
-        start: draftStart,
-        end: draftEnd,
-      })
-    }
+    if (!onUpdate || !draftLabel.trim() || !draftStart || !draftEnd) return
+    onUpdate(task.id, {
+      label: draftLabel.trim(),
+      start: draftStart,
+      end: draftEnd,
+    })
     setIsEditing(false)
+  }
+
+  const handleDeleteClick = () => {
+    if (!onDelete) return
+    onDelete(task.id)
   }
 
   // 🔽 編輯模式 UI
@@ -142,7 +146,7 @@ function GanttRow({
               </button>
               <button
                 type="button"
-                onClick={() => onDelete(task.id)}
+                onClick={handleDeleteClick}
                 aria-label={`刪除 ${task.label}`}
                 className="inline-flex items-center gap-1 rounded-md bg-destructive/10 px-1.5 py-0.5 text-[0.7rem] font-bold text-destructive transition-colors hover:bg-destructive hover:text-destructive-foreground"
               >
@@ -205,8 +209,8 @@ export function GanttSchedule({
   const handleAdd = (e: React.FormEvent) => {
     e.preventDefault()
     e.stopPropagation()
-    if (onAdd && newLabel && newStart && newEnd) {
-      onAdd({ label: newLabel, start: newStart, end: newEnd })
+    if (onAdd && newLabel.trim() && newStart && newEnd) {
+      onAdd({ label: newLabel.trim(), start: newStart, end: newEnd })
       setNewLabel('')
       setNewStart('')
       setNewEnd('')
