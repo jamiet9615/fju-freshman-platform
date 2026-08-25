@@ -79,23 +79,43 @@ def load_current() -> dict:
 
 
 def build_prompt(current: dict, documents: str) -> str:
-    year = datetime.now().year
-    return f"""你是一位輔仁大學的學務分析專家。請只根據下方官方網頁純文字，
-擷取最新學年度（約 {year} 年）新生的重要時程與必做事項。
-若某項時程在文本中找不到明確日期，請沿用「現有資料」，切勿捏造。
+    from datetime import datetime, timedelta
+    now = datetime.now()
+    two_months_later = now + timedelta(days=60)
+    
+    current_date_str = now.strftime("%Y-%m-%d")
+    limit_date_str = two_months_later.strftime("%Y-%m-%d")
+
+    return f"""你是一位輔仁大學的學務分析專家兼智慧時程管理助理。
+現在的基準日期是：{current_date_str}。
+
+請根據下方官方網頁的純文字內容，分析並維護新生的時程表（gantt）與代辦事項（todos）。
+
+【核心篩選與增刪規則】
+1. **時間範圍限制（絕對重要）**：
+   - **只收錄**開始日期（start）介於 **{current_date_str}** 到 **{limit_date_str}**（即未來兩個月內）的重要事務。
+   - 超過兩個月後的未來活動（例如太遠的期末考或下學期活動），**請從 gantt 中移除（減少）**。
+2. **四大類別重點**：
+   - 全人（全人教育課程、活動）
+   - 選課（初選、加退選等）
+   - 註冊（繳學費、註冊相關事項）
+   - 考試（期中考、期末考等）
+3. **動態維護（增刪改）**：
+   - **新增**：若網頁出現兩個月內的新重要時程，請加入陣列。
+   - **減少**：若舊時程已經過期，或不在兩個月範圍內，請直接從陣列中刪除。
+   - **修改**：若官方日程有變動，請更新其 start 與 end。
+4. 日期格式嚴格使用 `YYYY-MM-DD`。
 
 請「只」回傳符合下列結構的 JSON（不要加註解或 markdown code fence）：
 {{
   "gantt": [
-    {{"id": "course-selection", "label": "選課時間", "start": "YYYY-MM-DD", "end": "YYYY-MM-DD"}},
-    {{"id": "profile",          "label": "基本資料填寫", "start": "YYYY-MM-DD", "end": "YYYY-MM-DD"}},
-    {{"id": "tuition",          "label": "學雜費繳納", "start": "YYYY-MM-DD", "end": "YYYY-MM-DD"}}
+    {{"id": "course-selection", "label": "選課時間", "start": "YYYY-MM-DD", "end": "YYYY-MM-DD"}}
   ],
-  "todos": [{{"text": "一句簡短的新生必做事項"}}],
-  "summary": "一到兩句話的更新重點摘要"
+  "todos": [{{"text": "一句簡短的近期新生必做事項"}}],
+  "summary": "說明本次增刪了哪些重點時程的摘要（一到兩句話）"
 }}
 
-現有資料（找不到新資訊時的預設值）：
+現有資料：
 {json.dumps({"gantt": current["gantt"], "todos": current["todos"]}, ensure_ascii=False, indent=2)}
 
 官方網頁內容：
