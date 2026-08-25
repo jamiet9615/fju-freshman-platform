@@ -1,125 +1,39 @@
-import os
-import json
-from datetime import datetime, timezone
-import google.generativeai as genai
+name: AI Schedule Sync
 
-# 初始化 Gemini API
-API_KEY = os.environ.get("GEMINI_API_KEY")
-if not API_KEY:
-    raise ValueError("找不到 GEMINI_API_KEY 環境變數，請確認 GitHub Secrets 是否設定正確。")
+on:
+  schedule:
+    - cron: '0 0 * * *' # 每天午夜 00:00 (UTC) 自動執行
+  workflow_dispatch:     # 允許在 GitHub Actions 頁面手動點擊執行 (Run workflow)
 
-genai.configure(api_key=API_KEY)
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
 
-def fetch_website_content():
-    print("[agent] 開始人機協同對時…")
-    # TODO: 這裡放你原本抓取「輔大新生專區」與「學校行事曆」的爬蟲邏輯
-    # 範例模擬字串
-    scraped_data = """
-    [輔大新生專區與行事曆模擬內容]
-    1. 115學年度第一學期全人教育課程：2026-08/27 至 2026-09/01
-    2. 全校學生網路加退選課程：2026-09-03 至 2026-09-08
-    3. 圖書館舉辦 AI 應用講座：2026-09-20 (這應該被過濾)
-    4. 115學年度第一學期註冊繳費截止日：2026-08/31
-    5. 期中考試週：2026-11-09 至 2026-11-14
-    """
-    print("[agent] 已抓取 輔大新生專區")
-    print("[agent] 已抓取 學校行事曆")
-    return scraped_data
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
 
-def call_gemini_for_schedule(scraped_content):
-    prompt = f"""
-你是一個輔大新生專區的智慧時程助理。請分析以下從學校網站與行事曆抓取下來的原始文字內容：
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.10'
 
----
-【原始網頁內容】
-{scraped_content}
----
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install google-generativeai
 
-【任務說明】
-請從上述內容中，尋找並提取出**近期所有與以下四大類別相關的時程**：
-1. **全人**（全人教育、全人中心相關活動或課程）
-2. **選課**（如初選、加退選、退選、擋修等）
-3. **考試**（如期中考、期末考、畢業考等）
-4. **註冊**（如繳學費、註冊日、休復學申請等）
+      - name: Run AI Sync Agent
+        env:
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+        run: python agent.py # 假設你的 Python 程式碼放在根目錄叫 agent.py
 
-【嚴格過濾規則】
-- **絕對不要**收錄其他無關的活動（例如一般系所演講、社團招募、校慶活動、一般公告、跟上述四大類無關的時程）。
-- 如果沒有找到符合上述四大類的時程，請回傳空陣列 `[]`。
-- 日期格式必須統一為 `YYYY-MM-DD`（如果網頁只有寫月和日，請根據目前學年度或當前年份進行合理推算）。
-
-【輸出格式要求】
-請**絕對不要**包含額外的 Markdown 語法外框（例如 ```json ... ```），請直接回傳純 JSON 格式的陣列（Array），每個物件包含 id, label, start, end 欄位，結構如下：
-[
-  {{
-    "id": "英文或簡短代號（例如 course-selection）",
-    "label": "事件名稱（例如：選課時間）",
-    "start": "2026-09-01",
-    "end": "2026-09-15"
-  }}
-]
-"""
-
-    model = genai.GenerativeModel('gemini-1.5-flash')
-    resp = model.generate_content(prompt)
-    result_text = resp.text.strip()
-    
-    # 防呆：手動剝除可能帶有的 Markdown 標籤
-    if result_text.startswith("```json"):
-        result_text = result_text[7:]
-    if result_text.endswith("```"):
-        result_text = result_text[:-3]
-        
-    return result_text.strip()
-
-def update_schedule_json(new_gantt_json_str, file_path="data/schedule.json"):
-    try:
-        new_gantt_items = json.loads(new_gantt_json_str)
-    except json.JSONDecodeError as e:
-        print(f"[Error] AI 回傳的格式無法解析為 JSON: {e}")
-        print(f"原始回傳內容:\n{new_gantt_json_str}")
-        return
-
-    # 讀取現有的 schedule.json
-    data = {"updatedAt": "", "updatedBy": "ai-agent", "gantt": [], "todos": []}
-    if os.path.exists(file_path):
-        try:
-            with open(file_path, "r", encoding="utf-8") as f:
-                data = json.load(f)
-        except Exception as e:
-            print(f"[Warning] 讀取現有 JSON 失敗: {e}")
-
-    # 取得現有的 gantt 項目以便做去重與保留手動調整
-    existing_gantt = data.get("gantt", [])
-    existing_keys = {f"{item.get('label')}_{item.get('start')}" for item in existing_gantt}
-
-    added_count = 0
-    for item in new_gantt_items:
-        key = f"{item.get('label')}_{item.get('start')}"
-        if key not in existing_keys:
-            existing_gantt.append(item)
-            existing_keys.add(key)
-            added_count += 1
-
-    # 依照開始日期排序
-    existing_gantt.sort(key=lambda x: x.get('start', '9999-12-31'))
-
-    # 更新資料內容
-    data["gantt"] = existing_gantt
-    data["updatedAt"] = datetime.now(timezone.utc).isoformat().replace("+00:00", "Z")
-    data["updatedBy"] = "ai-agent"
-    # 保持 todos 完全原封不動
-
-    # 確保資料夾存在並寫回
-    os.makedirs(os.path.dirname(file_path), exist_ok=True)
-    with open(file_path, "w", encoding="utf-8") as f:
-        json.dump(data, f, ensure_ascii=False, indent=2)
-
-    print(f"[agent] 成功更新時程表 (gantt)！本次新增了 {added_count} 筆新時程。")
-
-def main():
-    scraped_content = fetch_website_content()
-    ai_response_str = call_gemini_for_schedule(scraped_content)
-    update_schedule_json(ai_response_str)
-
-if __name__ == "__main__":
-    main()
+      - name: Commit and push changes
+        run: |
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+          git add data/schedule.json
+          git diff --staged --quiet || git commit -m "chore: auto-sync AI schedule data"
+          git push
