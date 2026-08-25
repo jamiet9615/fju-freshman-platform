@@ -43,6 +43,7 @@ MODEL_NAME = "gemini-2.5-flash"
 SOURCES = [
     {"name": "輔大新生專區", "url": "https://fjcuadm.fju.edu.tw/speed.php?id=2"},
     {"name": "學校行事曆", "url": "http://www.secretariat.fju.edu.tw/article.jsp?articleID=8"},
+    {"name": "選課資訊網", "url": "https://course.fju.edu.tw/"},
 ]
 
 HEADERS = {"User-Agent": "Mozilla/5.0 (FJU-Freshman-Agent)"}
@@ -83,18 +84,17 @@ def build_prompt(current: dict, documents: str) -> str:
     year = datetime.now().year
     
     return f"""你是一位輔仁大學的學務分析專家兼智慧時程管理助理。
-請根據下方官方網頁的純文字內容，分析並維護新生的時程表（gantt）與代辦事項（todos）。
+請綜合下方所有官方網頁的純文字內容（包含新生專區、行事曆與選課資訊網），分析並維護新生的時程表（gantt）與代辦事項（todos）。
+
+【絕對必填的核心項目（不得遺漏）】
+1. **選課相關**：包含全人課程選填志願、初選、加退選等時間。
+2. **學雜費繳納**：網頁中提到的學費繳交期限（如 8/1 – 8/31）。
+3. **基本資料填寫與註冊**：包含新生基本資料填寫、學歷文件繳交期限（如 10/13 前）。
+4. **考試與典禮**：開學典禮、期中考、期末考週。
 
 【維護規則】
-1. **保留核心與近期時程**：
-   - 請務必保留現有資料中的核心重要項目（如：選課時間、基本資料填寫、學雜費繳納、期中/期末考、全人教育相關日程）。
-   - 若官方網頁有更新這些項目的確切日期，請直接**修改**其 start 與 end。
-   - 若網頁出現新的重要活動，請**新增**進去。
-   - 只有當專案已經過期很久的活動，才可以從 gantt 中移除（減少）。
-2. **四大類別重點**：
-   - 全人、選課、考試、註冊。
-3. **日期格式**：
-   - 嚴格使用 `YYYY-MM-DD`。若文本中找不到明確日期，請沿用「現有資料」，切勿隨意刪除重要項目。
+- 務必從文本中擷取上述所有關鍵時程，補入 `gantt` 陣列中。
+- 日期格式必須嚴格使用 `YYYY-MM-DD`。若文本中有明確起訖日，請確實對應 `start` 與 `end`。
 
 請「只」回傳符合下列結構的 JSON（不要加註解或 markdown code fence）：
 {{
@@ -105,7 +105,7 @@ def build_prompt(current: dict, documents: str) -> str:
   "summary": "一到兩句話的更新重點摘要"
 }}
 
-現有資料（請以此為基準進行增刪改，切勿無故清空）：
+現有資料（請以此為基礎進行增補，切勿漏掉選課與繳費）：
 {json.dumps({"gantt": current["gantt"], "todos": current["todos"]}, ensure_ascii=False, indent=2)}
 
 官方網頁內容：
