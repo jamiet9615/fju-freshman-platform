@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-08-25T19:17:47.448723Z",
+  "updatedAt": "2026-08-25T19:22:57.422206Z",
   "updatedBy": "ai-agent",
   "gantt": [
     {
@@ -25,6 +25,12 @@
       "label": "上學期學雜費繳納期間",
       "start": "2026-08-01",
       "end": "2026-10-13"
+    },
+    {
+      "id": "online-course-briefing",
+      "label": "線上選課說明會",
+      "start": "2026-08-19",
+      "end": "2026-08-19"
     }
   ],
   "todos": [
