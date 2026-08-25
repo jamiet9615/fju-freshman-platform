@@ -43,7 +43,7 @@ MODEL_NAME = "gemini-2.5-flash"
 SOURCES = [
     {"name": "輔大新生專區", "url": "https://fjcuadm.fju.edu.tw/speed.php?id=2"},
     {"name": "學校行事曆", "url": "http://www.secretariat.fju.edu.tw/article.jsp?articleID=8"},
-    {"name": "選課資訊網", "url": "https://course.fju.edu.tw/"},
+    {"name": "選課公告", "url": "https://course.fju.edu.tw/newsDetail.jsp?newsID=196&newsClassID=13"},
 ]
 
 HEADERS = {"User-Agent": "Mozilla/5.0 (FJU-Freshman-Agent)"}
