@@ -3,13 +3,13 @@ name: AI Schedule Sync
 on:
   schedule:
     - cron: '0 0 * * *' # 每天午夜 00:00 (UTC) 自動執行
-  workflow_dispatch:     # 允許在 GitHub Actions 手動點擊執行
+  workflow_dispatch:     # 允許手動點擊執行
 
 jobs:
   sync:
     runs-on: ubuntu-latest
     permissions:
-      contents: write    # 賦予 Git 權限以便自動把更新後的 json commit 回倉庫
+      contents: write
 
     steps:
       - name: Checkout repository
