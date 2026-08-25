@@ -80,32 +80,36 @@ def load_current() -> dict:
 
 
 def build_prompt(current: dict, documents: str) -> str:
-    from datetime import datetime
-    year = datetime.now().year
+    from datetime import datetime, timedelta
+    now = datetime.now()
+    today_str = now.strftime("%Y-%m-%d")
     
     return f"""你是一位輔仁大學的學務分析專家兼智慧時程管理助理。
-請綜合下方所有官方網頁的純文字內容（包含新生專區、行事曆與選課資訊網），分析並維護新生的時程表（gantt）與代辦事項（todos）。
+現在的基準日期（今天）是：{today_str}。
 
-【絕對必填的核心項目（不得遺漏）】
-1. **選課相關**：包含全人課程選填志願、初選、加退選等時間。
-2. **學雜費繳納**：網頁中提到的學費繳交期限（如 8/1 – 8/31）。
-3. **基本資料填寫與註冊**：包含新生基本資料填寫、學歷文件繳交期限（如 10/13 前）。
-4. **考試與典禮**：開學典禮、期中考、期末考週。
+請綜合下方所有官方網頁的純文字內容與現有時程，維護新生的時程表（gantt）與代辦事項（todos）。
 
-【維護規則】
-- 務必從文本中擷取上述所有關鍵時程，補入 `gantt` 陣列中。
-- 日期格式必須嚴格使用 `YYYY-MM-DD`。若文本中有明確起訖日，請確實對應 `start` 與 `end`。
+【絕對重要：時程過濾與維護規則】
+1. **過期自動剔除（重要）**：
+   - 活動的結束日期（end）若**早於今天（{today_str}）**，代表已經過期，**絕對不能收錄**（例如 8/19 已經結束的活動必須從 gantt 中刪除）。
+   - 只保留今天之後、或正在進行中的重要事務。
+2. **手動校正之核心選課與註冊時程（請務必納入）**：
+   - 全人志願選課時間：2026-08-27 至 2026-09-01（9/2 出結果）
+   - 初選選課時間：2026-09-03 至 2026-09-08（9/8 出結果）
+   - 學雜費繳納與新生基本資料填寫
+3. 日期格式嚴格使用 `YYYY-MM-DD`。
 
 請「只」回傳符合下列結構的 JSON（不要加註解或 markdown code fence）：
 {{
   "gantt": [
-    {{"id": "course-selection", "label": "選課時間", "start": "YYYY-MM-DD", "end": "YYYY-MM-DD"}}
+    {{"id": "course-selection", "label": "全人選課時間", "start": "2026-08-27", "end": "2026-09-01"}},
+    {{"id": "primary-selection", "label": "初選選課時間", "start": "2026-09-03", "end": "2026-09-08"}}
   ],
   "todos": [{{"text": "一句簡短的新生必做事項"}}],
   "summary": "一到兩句話的更新重點摘要"
 }}
 
-現有資料（請以此為基礎進行增補，切勿漏掉選課與繳費）：
+現有資料（請以此為基準進行過期篩選與增補）：
 {json.dumps({"gantt": current["gantt"], "todos": current["todos"]}, ensure_ascii=False, indent=2)}
 
 官方網頁內容：
