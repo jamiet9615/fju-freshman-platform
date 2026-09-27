@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-09-26T03:43:50.160924Z",
+  "updatedAt": "2026-09-27T03:53:03.233137Z",
   "updatedBy": "ai-agent",
   "gantt": [
     {
@@ -13,6 +13,18 @@
       "label": "115學年度第1學期註冊作業",
       "start": "2026-08-03",
       "end": "2026-10-13"
+    },
+    {
+      "id": "course-selection",
+      "label": "全人選課時間",
+      "start": "2026-08-27",
+      "end": "2026-09-01"
+    },
+    {
+      "id": "primary-selection",
+      "label": "初選選課時間",
+      "start": "2026-09-03",
+      "end": "2026-09-08"
     }
   ],
   "todos": [
