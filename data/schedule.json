@@ -1,7 +1,19 @@
 {
-  "updatedAt": "2026-10-07T04:31:23.367419Z",
+  "updatedAt": "2026-10-08T04:43:28.766465Z",
   "updatedBy": "ai-agent",
   "gantt": [
+    {
+      "id": "course-selection",
+      "label": "全人選課時間",
+      "start": "2026-08-27",
+      "end": "2026-09-01"
+    },
+    {
+      "id": "primary-selection",
+      "label": "初選選課時間",
+      "start": "2026-09-03",
+      "end": "2026-09-08"
+    },
     {
       "id": "tuition-payment",
       "label": "上學期學雜費繳納期間",
