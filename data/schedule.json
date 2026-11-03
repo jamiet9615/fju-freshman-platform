@@ -1,19 +1,7 @@
 {
-  "updatedAt": "2026-11-02T04:39:47.627379Z",
+  "updatedAt": "2026-11-03T05:30:08.623249Z",
   "updatedBy": "ai-agent",
   "gantt": [
-    {
-      "id": "course-selection",
-      "label": "全人選課時間",
-      "start": "2026-08-27",
-      "end": "2026-09-01"
-    },
-    {
-      "id": "primary-selection",
-      "label": "初選選課時間",
-      "start": "2026-09-03",
-      "end": "2026-09-08"
-    },
     {
       "id": "course-withdrawal",
       "label": "本學期（115-1）停修申請截止",
